@@ -1,0 +1,68 @@
+var fs = require('fs');
+var chalk = require('chalk');
+
+var loadNotes = () => {
+    try {
+        var noteBuffer = fs.readFileSync('./notes.json');
+        var notesString = noteBuffer.toString();
+        return JSON.parse(notesString);
+    } catch (e) {
+        return [];
+    }
+
+}
+
+var saveNotes = notes => {
+    fs.writeFileSync("./notes.json", JSON.stringify(notes));
+    console.log(chalk.green("Notes Updated."));
+}
+
+var add = function (title, body) {
+    var notes = loadNotes();
+    var duplicateTitle = notes.filter(note => note.title === title);
+    // var duplicateBody = notes.filter(note => note.body === body);
+    //if (duplicateTitle.length === 0 && duplicateBody.length ===0) {
+    if (duplicateTitle.length === 0) {
+        var note = { title, body };
+        notes.push(note);
+        saveNotes(notes);
+    }
+    else {
+        console.log(chalk.red("Duplicate Title, Try again!"));
+    }
+}
+
+var remove = function (title) {
+    var notes = loadNotes();
+    var noteExist = notes.filter(note => note.title === title);
+    if (noteExist.length > 0) {
+        var note = { title };
+        notes.pop(note);
+        saveNotes(notes);
+    }
+    else {
+        console.log(chalk.red("Note does not exist, Try again!"));
+    }
+}
+
+var read = function (title) {
+    var notes = loadNotes();
+    var note = notes.filter(note => note.title === title);
+    if (note.length === 0) {
+        console.log(chalk.red(title, " note does not exist"));
+    } else {
+        console.log(note);
+    }
+
+}
+
+var list = function (title) {
+    var notes = loadNotes();
+    var notes = notes.filter(note => note.title === title);
+    if (notes.length === 0) {
+        console.log(chalk.red(title, " note does not exist"));
+    } else {
+        console.log(notes);
+    }
+}
+module.exports = { add, remove, read, list };

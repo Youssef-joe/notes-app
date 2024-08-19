@@ -1,0 +1,75 @@
+var yargs = require('yargs');
+var notes = require('./util/notes');
+var chalk = require('chalk');
+
+yargs.command({
+    command: "add",
+    description: "To add new note",
+    builder: {
+        title: {
+            type: "string",
+            demandOption: true,
+            description: "Title of new note"
+        },
+        body: {
+            type: "string",
+            demandOption: true,
+            description: "Body of new note"
+        },
+
+    }, handler: function (argv) {
+        //console.log("ARGV: ", argv.title, argv.body);
+        notes.add(argv.title,argv.body);
+    }
+});
+
+yargs.command({
+    command: "remove",
+    description: "To remove new note",
+    builder: {
+        title: {
+            type: "string",
+            demandOption: true,
+            description: "Title of new note"
+        }
+    },
+    handler: function (argv) {
+        //console.log("ARGV: ", argv.title);
+        notes.remove(argv.title);
+    }
+});
+
+yargs.command({
+    command: "read",
+    description: "To read new note",
+    builder: {
+        title: {
+            type: "string",
+            demandOption: true,
+            description: "Title of new note"
+        }
+    },
+    handler: function (argv) {
+        //console.log("ARGV: ", argv.title);
+        notes.read(argv.title);
+    }
+});
+
+yargs.command({
+    command: "list",
+    description: "To list down all notes",
+    handler: function (argv) {
+        //console.log("List All Notes ");
+        console.log(chalk.grey("List all Notes"));
+        console.log(chalk.underline("List all Notes"));
+        console.log(chalk.underline(chalk.red("List all Notes")));
+        notes.list(argv.title);
+    }
+});
+
+yargs.parse();
+//node app.js add --title="New Title" --body="Title Body"
+//node app.js remove --title="New Title" 
+//node app.js list --title="New Title" 
+//node app.js list
+//node app.js --help //? will return the all comands with output
